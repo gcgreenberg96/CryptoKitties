@@ -17,12 +17,10 @@ class realTimeWebsocketClient(gdax.WebsocketClient):
         self.url = "wss://ws-feed.gdax.com/"
         self.products = [ETH]
         self.message_count = 0
-        print("Lets count the messages!")
     def on_message(self, msg):
         self.message_count += 1
         if 'price' in msg and 'type' in msg:
-            print ("Message type:", msg["type"],
-                   "\t@ {:.3f}".format(float(msg["price"])))
+            print ("Message type:", msg["type"],"\t@ {:.3f}".format(float(msg["price"])))
     def on_close(self):
         print("-- Goodbye! --")
 
@@ -44,6 +42,14 @@ def printRealTimePrices(count):
 def printAccounts(auth_client):
     print("\nAccount Data: \n")
     print(auth_client.get_accounts())
+
+def getDeltas(delta_time,total_time):
+    deltas = []
+    if (delta_time > total_time) or (delta_time % total_time != 0):
+        print ("Invalid time inputs")
+        return deltas
+    #...
+    return deltas
 
 auth_client = login_authenticated(sandbox_api_key, sandbox_secret, sandbox_passphrase)
 printRealTimePrices(100)
