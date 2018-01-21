@@ -5,21 +5,17 @@ import time
 
 # Always convert numbers to strings when making a request with values
 
+BTC = "BTC-USD"
+ETH = "ETH-USD"
+
 sandbox_api_key = "41bafe8b3899d0f3d6c3ae5b28952636"
 sandbox_secret = "J9Ga2gM03QGTpREb+uXzIVNVxDgEJVo970tee5gq78mUAOl8JiC2TMO0qAV5na25KIuMcEymR43OM8kCxn3JqA=="
 sandbox_passphrase = "lefley"
 
-def login_public():
-    return gdax.PublicClient() # public clients have basic usage
-
-def login_authenticated(key, b64secret, passphrase):
-    # currently in sandbox mode
-    return gdax.AuthenticatedClient(key, b64secret, passphrase, api_url="https://api-public.sandbox.gdax.com") # these params are given once gdax account is configured with api
-
-class myWebsocketClient(gdax.WebsocketClient):
+class realTimeWebsocketClient(gdax.WebsocketClient):
     def on_open(self):
         self.url = "wss://ws-feed.gdax.com/"
-        self.products = ["BTC-USD"]
+        self.products = [ETH]
         self.message_count = 0
         print("Lets count the messages!")
     def on_message(self, msg):
@@ -30,16 +26,24 @@ class myWebsocketClient(gdax.WebsocketClient):
     def on_close(self):
         print("-- Goodbye! --")
 
+def login_public():
+    return gdax.PublicClient() # public clients have basic usage
 
+def login_authenticated(key, b64secret, passphrase):
+    # currently in sandbox mode
+    return gdax.AuthenticatedClient(key, b64secret, passphrase, api_url="https://api-public.sandbox.gdax.com") # these params are given once gdax account is configured with api
+
+def printRealTimePrices(count):
+    wsClient = realTimeWebsocketClient()
+    wsClient.start()
+    print(wsClient.url, wsClient.products)
+    while(wsClient.message_count < count):
+        pass
+    wsClient.close()
+
+def printAccounts(auth_client):
+    print("\nAccount Data: \n")
+    print(auth_client.get_accounts())
 
 auth_client = login_authenticated(sandbox_api_key, sandbox_secret, sandbox_passphrase)
-account = auth_client.get_accounts()
-print(account)
-
-wsClient = myWebsocketClient()
-wsClient.start()
-print(wsClient.url, wsClient.products)
-#while (wsClient.message_count < 500):
-#    print ("\nmessage_count =", "{} \n".format(wsClient.message_count))
-#    time.sleep(1)
-wsClient.close()
+printRealTimePrices(100)
