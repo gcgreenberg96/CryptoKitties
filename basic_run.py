@@ -18,7 +18,12 @@ def getBetterCoin():
 	#Last inputs are most recent
 	
 	data = np.array(client.get_klines(symbol="ETHBTC", interval='5m', limit=288))[:,4]
-	
+
+	order = client.get_order_book(symbol="ETHBTC")
+	bids = np.array(orders["bids"],dtype=object)[:,:-1].astype(float)
+	asks = np.array(orders["bids"],dtype=object)[:,:-1].astype(float)
+	curPrice = (bids[0,0] + asks[0,0])/2
+
 	return HODL #or
 	return BTC #or
 	return ETH 
