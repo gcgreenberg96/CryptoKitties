@@ -1,7 +1,7 @@
 from time import sleep
 import binance.client as bc
 import tensorflow as tf
-
+import numpy as np
 
 ETH = "ETH"
 BTC = "BTC"
@@ -15,6 +15,10 @@ def login():
 def getBetterCoin():
 	#...........NN magic
 	#...........
+	#Last inputs are most recent
+	
+	data = np.array(client.get_klines(symbol="ETHBTC", interval='5m', limit=288))[:,4]
+	
 	return HODL #or
 	return BTC #or
 	return ETH 
