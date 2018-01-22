@@ -1,5 +1,6 @@
 import gdax
 from time import sleep
+from datetime import datetime, timedelta
 import tensorflow
 # Python docs: https://github.com/danpaquin/gdax-python
 # GDAX docs: https://docs.gdax.com/?python#rate-limits
@@ -49,17 +50,30 @@ def tradeOrHODL(prediction):
     return HODL
     return COIN
 
-def trade(auth_client,product):
-    #---------- TODO ------------
-    pass
+def trade(auth_client,prediction):
+    if prediction < 0: # prediction says price will go down
+        auth_client.sell(price = '',
+                         size = '',
+                         product_id = COIN)
+    else: # prediction says price will go up
+        auth_client.buy(price = '',
+                         size = '',
+                         product_id = COIN)
 
-def getDeltas(delta_time,total_time):
+def getDeltas(auth_client):
     deltas = []
-    if (delta_time > total_time) or (delta_time % total_time != 0):
-        print ("Invalid time inputs")
-        return deltas
-    #---------- TODO ------------
-    # Get newest deltas from gdax
+    five_min_prices = []
+
+    end_time = str(datetime.now()) # Get the current time in ISO 8601
+    start_time = str(datetime.now() - timedelta(days = 1)) # Subtract 24 hours from end_time
+    time_slice = 300 # represents 5 minutes (see gdax docs)
+    five_min_prices = auth_client.get_product_historic_rates(COIN, start = start_time, end = end_time, granularity = time_slice)
+
+    for i in range(len(five_min_prices)):
+        if (i == 0)
+            continue # skip first price (no previous price to compare from)
+        deltas[i-1] = five_min_prices[i] - five_min_prices[i-1] # create deltas
+
     return deltas
 
 def trainNeuralNetwork():
@@ -82,7 +96,7 @@ def main():
         should_hold = tradeOrHODL(prediction)
 
         if (should_hold != HODL):
-            trade(auth_client, COIN)
+            trade(auth_client, prediction)
 
         sleep(5*60) # trade every 5 min
 
