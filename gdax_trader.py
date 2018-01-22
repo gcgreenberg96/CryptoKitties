@@ -1,5 +1,5 @@
 import gdax
-import time
+from time import sleep
 import tensorflow
 # Python docs: https://github.com/danpaquin/gdax-python
 # GDAX docs: https://docs.gdax.com/?python#rate-limits
@@ -9,6 +9,7 @@ import tensorflow
 BTC = "BTC-USD"
 ETH = "ETH-USD"
 COIN = ETH
+HODL = "HODL"
 
 sandbox_api_key = "41bafe8b3899d0f3d6c3ae5b28952636"
 sandbox_secret = "J9Ga2gM03QGTpREb+uXzIVNVxDgEJVo970tee5gq78mUAOl8JiC2TMO0qAV5na25KIuMcEymR43OM8kCxn3JqA=="
@@ -42,7 +43,7 @@ def printAccounts(auth_client):
     print("\nAccount Data: \n")
     print(auth_client.get_accounts())
 
-def tradeOrHODL():
+def tradeOrHODL(prediction):
     #---------- TODO ------------
     # make decision on whether to hold or trade
     return HODL
