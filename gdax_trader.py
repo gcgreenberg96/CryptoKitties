@@ -91,7 +91,7 @@ def main():
 
     while True:
 
-        deltas = getDeltas(5,24*60) # passing time as minutes
+        deltas = getDeltas(auth_client) # passing time as minutes
         prediction = testNeuralNetwork(deltas)
         should_hold = tradeOrHODL(prediction)
 
